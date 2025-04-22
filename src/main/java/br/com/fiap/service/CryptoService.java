@@ -1,37 +1,46 @@
 package br.com.fiap.service;
 
-import br.com.fiap.model.coins.CoinBitcoin;
-import br.com.fiap.model.coins.CoinDog;
-import br.com.fiap.model.coins.CoinSolana;
-import br.com.fiap.model.coins.CoinUsdt;
+import br.com.fiap.cache.CryptoPriceCache;
+import br.com.fiap.model.coins.CurrencyPair;
+import br.com.fiap.model.coins.CoinCrypto;
 
 public class CryptoService {
 
-    private final CoinBitcoin bitcoin = new CoinBitcoin();
-    private final CoinSolana solana = new CoinSolana();
-    private final CoinUsdt usdt = new CoinUsdt();
-    private final CoinDog doge = new CoinDog();
+    private final CryptoPriceCache cache = CryptoPriceCache.getInstance(); // instância do cache
 
     public void showValues(int opcaoMoeda) {
-        if (bitcoin.getCoinPriceBitcoinUsd() == -1) {
+        CurrencyPair pair = null;
+
+        switch (opcaoMoeda) {
+            case 1:
+                pair = CurrencyPair.BITCOIN;
+                break;
+            case 2:
+                pair = CurrencyPair.SOLANA;
+                break;
+            case 3:
+                pair = CurrencyPair.USDT;
+                break;
+            case 4:
+                pair = CurrencyPair.DOGE;
+                break;
+            case 0:
+                System.out.println("Obrigado pela preferencia!");
+                break;
+            default:
+                System.out.println("Opção inválida.");
+                return;
+        }
+
+        CoinCrypto crypto = new CoinCrypto(pair);
+
+        // Fetch prices from cache
+        crypto.fetchPrices(cache); // Atualiza os preços usando o cache
+
+        if (crypto.getCoinPrice() == -1) {
             System.out.println("Erro ao buscar os valores das moedas. Tente novamente mais tarde.");
             return;
         }
-        switch (opcaoMoeda) {
-            case 1:
-                System.out.println(bitcoin.bitcoinDataUsd());
-                System.out.println(solana.solanaDataUsd());
-                System.out.println(usdt.usdtDataUsd());
-                System.out.println(doge.dogDataUsd());
-                break;
-            case 2:
-                System.out.println(bitcoin.bitcoinDataBrl());
-                System.out.println(solana.solanaDataBrl());
-                System.out.println(usdt.usdtDataBrl());
-                System.out.println(doge.dogDataBrl());
-                break;
-            default:System.out.println("Opção inválida.");
-            break;
-        }
+        System.out.println(crypto.coinData());
     }
 }

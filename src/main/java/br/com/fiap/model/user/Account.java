@@ -23,6 +23,16 @@ public class Account {
         this.password = password;
     }
 
+    public Account(String name, LocalDate dt_birth, double renda, String cpf, String email, String password, int id_address){
+        this.name = name;
+        this.dt_birth = dt_birth;
+        this.renda = renda;
+        this.cpf = cpf;
+        this.email = email;
+        this.password = password;
+        this.id_address = id_address;
+    }
+
     public Account(){
 
     }

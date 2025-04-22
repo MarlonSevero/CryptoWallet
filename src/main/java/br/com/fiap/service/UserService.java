@@ -1,6 +1,6 @@
 package br.com.fiap.service;
 import br.com.fiap.dao.AccountDao;
-import br.com.fiap.dao.Addressdao;
+import br.com.fiap.dao.AddressDao;
 import br.com.fiap.model.user.Account;
 import br.com.fiap.model.user.Address;
 import java.time.LocalDate;
@@ -13,7 +13,7 @@ public class UserService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         try {
             AccountDao accountDao = new AccountDao();
-            Addressdao addressdao = new Addressdao();
+            AddressDao addressdao = new AddressDao();
             Account contaCadastrada = new Account();
             Address address = new Address();
 
@@ -21,15 +21,21 @@ public class UserService {
             String nome = scanner.nextLine();
 
             System.out.println("Digite sua data de nascimento (dd/MM/yyyy): ");
-            LocalDate dtNascimento = LocalDate.parse(scanner.nextLine(), formatter);
-
+            LocalDate dtNascimento = null;
+            while (true){
+                try{
+                    String inputData = scanner.nextLine();
+                    dtNascimento = LocalDate.parse(inputData, formatter);
+                    break;
+                } catch (Exception e) {
+                    System.err.println("Data Invalida tente novamente!");
+                }
+            }
             contaCadastrada.setDt_birth(dtNascimento);
             contaCadastrada.setName(nome);
 
             System.out.println("Informe sua renda mensal:");
-            double renda = scanner.nextDouble();
-            scanner.nextLine(); // consumir linha
-
+            contaCadastrada.setRenda(scanner.nextDouble());
             System.out.println("Informe os dados do endereço:");
             System.out.print("Rua: ");
             address.setRua(scanner.nextLine());

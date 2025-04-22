@@ -1,11 +1,14 @@
 package br.com.fiap.factory;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import br.com.fiap.exception.FetcherErr;
 import org.json.JSONObject; //precisa ajustar o arquivo .jar e importar de https://repo1.maven.org/maven2/org/json/json/20250107/
-public class CryptoPriceFetcher {
+public class PriceFetcherFactory {
 
     private static final String API_URL = "https://api.coingecko.com/api/v3/simple/price"; //gerando uma constante com a API da coinGecko
 
@@ -29,8 +32,8 @@ public class CryptoPriceFetcher {
 
             JSONObject jsonResp = new JSONObject(resp.toString());//criamos o objeto JSObjeto com a resposta da API
             return jsonResp.getJSONObject(crypto).getDouble(coinConvert); //retorna preco extraido do JSON
-        }catch (Exception e){ //valida se ocorrer erro
-            e.printStackTrace();
+        }catch (FetcherErr | IOException e){ //valida se ocorrer erro
+            System.err.println("Erro ao obter valor de alguma moeda!");
             return -1;
         }
     }
